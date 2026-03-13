@@ -39,7 +39,7 @@ cardRow.innerHTML = fruits
             <div class="card-body">
               <p class="h5 card-title">${fruit.name}</p>
               <p class="card-text">Price: $${fruit.price.toFixed(2)}</p>
-              <button class="btn btn-primary addToCart" data-id="${fruit.id}">Add to Cart</button>
+              <button class="btn btn-primary addToCart" data-id="${fruit.id}" id="liveToastBtn">Add to Cart</button>
             </div>
           </div>
        </div>`,
@@ -48,14 +48,24 @@ cardRow.innerHTML = fruits
 
 let cart = [];
 
+// const showToast = (message) => {
+//   const toastBody = document.querySelector(".toast");
+//   const liveToast = document.querySelector(".toast-msg");
+
+//   toastBody.textContent = message;
+
+//   const toastTrigger = new bootstrap.Toast(liveToast);
+
+//   toastTrigger.show();
+// };
+
 document.addEventListener("click", (e) => {
-  // Add to Cart
   if (e.target.classList.contains("addToCart")) {
     const fruitId = Number(e.target.dataset.id);
+
     addToCart(fruitId);
   }
 
-  // Increase Quantity
   if (e.target.classList.contains("increaseQty")) {
     const fruitId = Number(e.target.dataset.id);
     const item = cart.find((i) => i.id === fruitId);
@@ -65,17 +75,17 @@ document.addEventListener("click", (e) => {
     }
   }
 
-  // Decrease Quantity
   if (e.target.classList.contains("decreaseQty")) {
     const fruitId = Number(e.target.dataset.id);
     const item = cart.find((i) => i.id === fruitId);
     if (item && item.quantity > 1) {
       item.quantity--;
-      renderCart();
+    } else {
+      cart = cart.filter((i) => i.id !== fruitId);
     }
+    renderCart();
   }
 
-  // Delete Item
   if (e.target.classList.contains("deleteItem")) {
     const fruitId = Number(e.target.dataset.id);
     cart = cart.filter((i) => i.id !== fruitId);
@@ -87,19 +97,16 @@ const addToCart = (fruitId) => {
   const fruit = fruits.find((p) => p.id === fruitId);
   const existing = cart.find((e) => e.id === fruitId);
 
-  if (existing) {
-    existing.quantity++;
-  } else {
-    cart.push({ ...fruit, quantity: 1 });
-  }
+  existing ? existing.quantity++ : cart.push({ ...fruit, quantity: 1 });
 
   renderCart();
-  console.log(cart);
+
+  // showToast(`${fruit.name} is added to cart`);
 };
 
+const badge = document.querySelector(".badge");
 const renderCart = () => {
   const fruitCart = document.getElementById("fruitCart");
-  const badge = document.querySelector(".badge");
   const orderNowBtn = document.getElementById("orderNowBtn");
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -116,8 +123,10 @@ const renderCart = () => {
         </div>
     `;
     orderNowBtn.disabled = true;
+    // orderNowBtn.style.cursor = "not-allowed"
     return;
   }
+
   orderNowBtn.disabled = false;
   fruitCart.innerHTML = `
       <div class="table-responsive">
@@ -136,38 +145,32 @@ const renderCart = () => {
               .map(
                 (item) => `
             <tr class="border-bottom">
-              <!-- Item Name -->
-              <td class="py-2">
+              <td class="py-2 d-flex align-items-center justify-content-center">
                 <span class="fw-bold">${item.name}</span>
                 <div class="d-md-none text-muted small">$${item.price.toFixed(2)}</div>
               </td>
               
-              <!-- Price (hidden on mobile) -->
-              <td class="py-2 d-none d-md-table-cell">
+              <td class="py-2 d-flex d-md-table-cell align-items-center justify-content-center">
                 $${item.price.toFixed(2)}
               </td>
               
-              <!-- Quantity with +/- buttons -->
-              <td class="py-2">
-                <div class="d-flex gap-1 align-items-center">
-                  <button class="btn btn-sm btn-outline-secondary decreaseQty px-2" data-id="${item.id}">−</button>
+              <td class="py-2 d-flex align-items-center justify-content-center">
+                <div class="d-flex gap-1 align-items-center justify-content-center">
+                  <button class="btn btn-sm btn-outline-secondary decreaseQty px-3" data-id="${item.id}">−</button>
                   <span class="fw-bold" style="width: 30px; text-align: center;">${item.quantity}</span>
-                  <button class="btn btn-sm btn-outline-secondary increaseQty px-2" data-id="${item.id}">+</button>
+                  <button class="btn btn-sm btn-outline-secondary increaseQty px-3" data-id="${item.id}">+</button>
                 </div>
               </td>
               
-              <!-- Item Total (hidden on mobile) -->
-              <td class="py-2 fw-bold d-none d-md-table-cell">
+              <td class="py-2 fw-bold d-md-table-cell d-flex gap-1 align-items-center justify-content-center">
                 $${(item.price * item.quantity).toFixed(2)}
               </td>
               
-              <!-- Delete button always visible -->
-              <td class="py-2 text-end">
-                <button class="btn btn-sm btn-danger deleteItem" data-id="${item.id}">X</button>
+              <td class="py-2 text-end d-flex align-items-center justify-content-center">
+                <button class="btn btn-sm btn-danger px-3 deleteItem" data-id="${item.id}">X</button>
               </td>
             </tr>
             
-            <!-- Mobile: Show total per item -->
             <tr class="d-md-none">
               <td colspan="4" class="py-1 text-end text-muted small">
                 Total: <span class="fw-bold">$${(item.price * item.quantity).toFixed(2)}</span>
@@ -186,12 +189,38 @@ const renderCart = () => {
     `;
 };
 
-document.getElementById('exampleModalToggle').addEventListener('show.bs.modal', () => {
-  renderCart();
-});
+document
+  .getElementById("exampleModalToggle")
+  .addEventListener("show.bs.modal", () => {
+    renderCart();
+  });
 
-document.getElementById('confirmOrderBtn').addEventListener('click', function() {
+document.getElementById("confirmOrderBtn").addEventListener("click", () => {
+  const container = document.querySelector(".lottieContainer");
+
+  document.querySelector(".container").style.display = "none";
+
+
   if (cart.length > 0) {
-    alert('✅ Order Placed Successfully!');
+    container.style.display = "block";
+    let animation = lottie.loadAnimation({
+      container: container,
+      renderer: "svg",
+      loop: false,
+      autoplay: false,
+      path: "../Animation/order-placed1.json",
+    });
+    animation.play();
+
+    animation.addEventListener("complete", () => {
+      container.style.display = "none";
+      document.querySelector(".container").style.display = "block";
+
+      cart = [];
+    });
+    badge.textContent = "";
   }
+  setTimeout(() => {
+    window.location.reload();
+  }, 5000);
 });
