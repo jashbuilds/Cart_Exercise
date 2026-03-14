@@ -1,21 +1,19 @@
+:root {
+    --primary-font: 'Poppins', sans-serif;
+    --lottie-dimension: 300px;
+}
+
 body {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--primary-font);
 }
 
 .cart-container .main-content .lottieContainer {
     transform: translate(-50%, -50%);
-    width: 300px;
-    height: 300px;
-    display: none;
-}
-
-.cart-container .main-content .liveToast {
-    top: 10%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    width: var(--lottie-dimension);
+    height: var(--lottie-dimension);
 }
 
 @media only screen and (max-width: 576px) {

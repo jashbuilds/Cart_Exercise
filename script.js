@@ -1,4 +1,4 @@
-const fruits = [
+const products = [
   {
     id: 1,
     imgSrc: "../Images/fruit-tangerine.png",
@@ -25,33 +25,33 @@ const fruits = [
   },
 ];
 
-const cardRow = document.getElementById("cardsRow");
+const productGrid = document.getElementById("product-grid");
 
-cardRow.innerHTML = fruits
+productGrid.innerHTML = products
   .map(
-    (fruit) =>
+    (product) =>
       `
        <div class="col-12 col-lg-3 col-md-6 d-flex justify-content-center align-items-center">
           <div class="card w-100 border rounded-4">
-            <img src="${fruit.imgSrc}"
+            <img src="${product.imgSrc}"
               class="card-img-top object-fit-fill w-auto h-auto"
-              alt="${fruit.name}" width="286" height="286">
+              alt="${product.name}" width="286" height="286">
             <div class="card-body">
-              <p class="h5 card-title">${fruit.name}</p>
-              <p class="card-text">Price: $${fruit.price.toFixed(2)}</p>
-              <button class="btn btn-primary addToCart" data-id="${fruit.id}" id="liveToastBtn">Add to Cart</button>
+              <p class="h5 card-title">${product.name}</p>
+              <p class="card-text">Price: $${product.price.toFixed(2)}</p>
+              <button class="btn btn-primary btn-add-to-cart" data-id="${product.id}">Add to Cart</button>
             </div>
           </div>
        </div>`,
   )
   .join("");
 
-let cart = [];
+let shoppingCart = [];
 
-const showToast = (message) => {
-  const toastContainer = document.getElementById("liveToast");
-  const toastBody = toastContainer.querySelector(".toast-msg");
-  
+const showNotificationToast = (message) => {
+  const toastContainer = document.getElementById("notificationToast");
+  const toastBody = toastContainer.querySelector(".toast-message");
+
   toastBody.textContent = message;
 
   const toast = new bootstrap.Toast(toastContainer);
@@ -59,73 +59,72 @@ const showToast = (message) => {
 };
 
 document.addEventListener("click", (e) => {
-  if (e.target.classList.contains("addToCart")) {
-    const fruitId = Number(e.target.dataset.id);
-
-    addToCart(fruitId);
+  if (e.target.classList.contains("btn-add-to-cart")) {
+    const productId = Number(e.target.dataset.id);
+    addToCart(productId);
   }
 
-  if (e.target.classList.contains("increaseQty")) {
-    const fruitId = Number(e.target.dataset.id);
-    const item = cart.find((i) => i.id === fruitId);
+  if (e.target.classList.contains("btn-increase-qty")) {
+    const productId = Number(e.target.dataset.id);
+    const item = shoppingCart.find((i) => i.id === productId);
     if (item) {
       item.quantity++;
-      renderCart();
+      renderShoppingCart();
     }
   }
 
-  if (e.target.classList.contains("decreaseQty")) {
-    const fruitId = Number(e.target.dataset.id);
-    const item = cart.find((i) => i.id === fruitId);
+  if (e.target.classList.contains("btn-decrease-qty")) {
+    const productId = Number(e.target.dataset.id);
+    const item = shoppingCart.find((i) => i.id === productId);
     if (item && item.quantity > 1) {
       item.quantity--;
     } else {
-      cart = cart.filter((i) => i.id !== fruitId);
+      shoppingCart = shoppingCart.filter((i) => i.id !== productId);
     }
-    renderCart();
+    renderShoppingCart();
   }
 
-  if (e.target.classList.contains("deleteItem")) {
-    const fruitId = Number(e.target.dataset.id);
-    cart = cart.filter((i) => i.id !== fruitId);
-    renderCart();
+  if (e.target.classList.contains("btn-remove-item")) {
+    const productId = Number(e.target.dataset.id);
+    shoppingCart = shoppingCart.filter((i) => i.id !== productId);
+    renderShoppingCart();
   }
 });
 
-const addToCart = (fruitId) => {
-  const fruit = fruits.find((p) => p.id === fruitId);
-  const existing = cart.find((e) => e.id === fruitId);
+const addToCart = (productId) => {
+  const product = products.find((p) => p.id === productId);
+  const existingItem = shoppingCart.find((e) => e.id === productId);
 
-  existing ? existing.quantity++ : cart.push({ ...fruit, quantity: 1 });
+  existingItem ? existingItem.quantity++ : shoppingCart.push({ ...product, quantity: 1 });
 
-  renderCart();
-  showToast(`${fruit.name} has been added to your cart!`);
+  renderShoppingCart();
+  showNotificationToast(`${product.name} has been added to your cart!`);
 };
 
-const badge = document.querySelector(".badge");
-const renderCart = () => {
-  const fruitCart = document.getElementById("fruitCart");
-  const orderNowBtn = document.getElementById("orderNowBtn");
+const cartBadge = document.querySelector(".badge");
+const renderShoppingCart = () => {
+  const cartTableBody = document.getElementById("cart-table-body");
+  const btnCheckout = document.getElementById("btn-checkout");
 
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const grandTotal = cart.reduce((sum, item) => {
+  const totalItemsCount = shoppingCart.reduce((sum, item) => sum + item.quantity, 0);
+  const totalOrderValue = shoppingCart.reduce((sum, item) => {
     return sum + item.price * item.quantity;
   }, 0);
 
-  badge.textContent = totalItems;
+  cartBadge.textContent = totalItemsCount;
 
-  if (cart.length === 0) {
-    fruitCart.innerHTML = `
+  if (shoppingCart.length === 0) {
+    cartTableBody.innerHTML = `
         <div class="text-center py-5">
             <p class="text-muted fs-5">Your cart is empty</p>
         </div>
     `;
-    orderNowBtn.disabled = true;
+    btnCheckout.disabled = true;
     return;
   }
 
-  orderNowBtn.disabled = false;
-  fruitCart.innerHTML = `
+  btnCheckout.disabled = false;
+  cartTableBody.innerHTML = `
       <div class="table-responsive">
         <table class="table table-borderless">
           <thead class="d-none d-md-table-header-group">
@@ -138,7 +137,7 @@ const renderCart = () => {
             </tr>
           </thead>
           <tbody>
-            ${cart
+            ${shoppingCart
       .map(
         (item) => `
             <tr class="border-bottom">
@@ -153,9 +152,9 @@ const renderCart = () => {
               
               <td class="py-2 d-flex align-items-center justify-content-center">
                 <div class="d-flex gap-1 align-items-center justify-content-center">
-                  <button class="btn btn-sm btn-outline-secondary decreaseQty px-3" data-id="${item.id}">−</button>
+                  <button class="btn btn-sm btn-outline-secondary btn-decrease-qty px-3" data-id="${item.id}">−</button>
                   <span class="fw-bold" style="width: 30px; text-align: center;">${item.quantity}</span>
-                  <button class="btn btn-sm btn-outline-secondary increaseQty px-3" data-id="${item.id}">+</button>
+                  <button class="btn btn-sm btn-outline-secondary btn-increase-qty px-3" data-id="${item.id}">+</button>
                 </div>
               </td>
               
@@ -164,7 +163,7 @@ const renderCart = () => {
               </td>
               
               <td class="py-2 text-end d-flex align-items-center justify-content-center">
-                <button class="btn btn-sm btn-danger px-3 deleteItem" data-id="${item.id}">X</button>
+                <button class="btn btn-sm btn-danger px-3 btn-remove-item" data-id="${item.id}">X</button>
               </td>
             </tr>
             
@@ -181,46 +180,45 @@ const renderCart = () => {
       </div>
       
       <div class="px-2 py-3 mt-3 border-top">
-        <h5 class="text-end fw-bold">Grand Total: $${grandTotal.toFixed(2)}</h5>
+        <h5 class="text-end fw-bold">Grand Total: $${totalOrderValue.toFixed(2)}</h5>
       </div>
     `;
 };
 
 document
-  .getElementById("exampleModalToggle")
+  .getElementById("cartSummaryModal")
   .addEventListener("show.bs.modal", () => {
-    renderCart();
+    renderShoppingCart();
   });
 
-document.getElementById("confirmOrderBtn").addEventListener("click", () => {
-  const container = document.querySelector(".lottieContainer");
+document.getElementById("btn-confirm-order").addEventListener("click", () => {
+  const lottieContainer = document.querySelector(".lottieContainer");
+  const mainContainer = document.querySelector(".container");
 
-  document.querySelector(".container").style.display = "none";
+  mainContainer.classList.add("d-none");
 
-  if (cart.length > 0) {
-    container.style.display = "block";
+  if (shoppingCart.length > 0) {
+    lottieContainer.classList.remove("d-none");
 
-    container.innerHTML = '<h1 class="thankyou-text text-center mb-0 text-success">Order Placed, Thank You!</h1>';
-
-    let animation = lottie.loadAnimation({
-      container: container,
+    let orderAnimation = lottie.loadAnimation({
+      container: lottieContainer,
       renderer: "svg",
       loop: false,
       autoplay: false,
       path: "../Animation/order-placed1.json",
     });
-    animation.play();
+    orderAnimation.play();
 
-    animation.addEventListener("complete", () => {
-      container.style.display = "none";
-      document.querySelector(".container").style.display = "block";
+    orderAnimation.addEventListener("complete", () => {
+      lottieContainer.classList.add("d-none");
+      mainContainer.classList.remove("d-none");
 
-      animation.destroy();
+      orderAnimation.destroy();
 
-      cart = [];
-      renderCart();
+      shoppingCart = [];
+      renderShoppingCart();
     });
-    badge.textContent = "0";
+    cartBadge.textContent = "0";
   }
 
 });

@@ -36,7 +36,7 @@
             <div>
                 <a href="#" class="position-relative">
                     <img src="../Icons/cart.svg" alt="cart-icon" width="36" height="36"
-                        data-bs-target="#exampleModalToggle" data-bs-toggle="modal">
+                        data-bs-target="#cartSummaryModal" data-bs-toggle="modal">
                     <span
                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-success"></span>
                 </a>
@@ -44,37 +44,38 @@
         </div>
     </nav>
 
-    <div class="main main-content">
-        <div class="container pt-5 pb-5">
-            <div class="row d-flex gy-5" id="cardsRow">
-                <!-- Card html structure will go here -->
+    <main class="main main-content">
+        <section class="container pt-5 pb-5">
+            <h1 class="visually-hidden">Farm2Home Products</h1>
+            <div class="row d-flex gy-5" id="product-grid">
+                <!-- Card html structure -->
             </div>
-        </div>
+        </section>
 
-        <div class="modal fade" id="exampleModalToggle" aria-labelledby="exampleModalToggleLabel" tabindex="-1"
+        <div class="modal fade" id="cartSummaryModal" aria-labelledby="cartSummaryModalLabel" tabindex="-1"
             data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <p class="h1 modal-title fs-5" id="exampleModalToggleLabel">Cart</p>
+                        <p class="h3 modal-title fs-5" id="cartSummaryModalLabel">Cart</p>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body" id="fruitCart">
-                        <!-- Modal html structure will go here -->
+                    <div class="modal-body" id="cart-table-body">
+                        <!-- Modal html structure -->
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-success" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal"
-                            id="orderNowBtn" disabled>Order Now</button>
+                        <button class="btn btn-success" data-bs-target="#orderConfirmationModal" data-bs-toggle="modal"
+                            id="btn-checkout" disabled>Checkout</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="exampleModalToggle2" aria-labelledby="exampleModalToggleLabel2" tabindex="-1"
+        <div class="modal fade" id="orderConfirmationModal" aria-labelledby="orderConfirmationModalLabel" tabindex="-1"
             data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <p class="h1 modal-title fs-5" id="exampleModalToggleLabel2">Confirm Your
+                        <p class="h3 modal-title fs-5" id="orderConfirmationModalLabel">Confirm Your
                             Order!</p>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -83,23 +84,23 @@
                             with this order?</p>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-danger" id="confirmOrderBtn" data-bs-dismiss="modal">Confirm
+                        <button class="btn btn-danger" id="btn-confirm-order" data-bs-dismiss="modal">Confirm
                             Order</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="lottieContainer position-absolute top-50 start-50 ">
-            <h1 class="thankyou-text text-center mb-0 text-success">Order Placed, Thank You!</h1>
+        <div class="lottieContainer position-absolute top-50 start-50 d-none">
+            <h2 class="thankyou-text text-center mb-0 text-success">Order Placed, Thank You!</h2>
         </div>
 
-        <div class="toast-container position-fixed bottom-0 end-0 p-3">
-            <div id="liveToast" class="toast text-bg-success border-0" role="alert" aria-live="assertive"
+        <div class="position-fixed bottom-0 end-0 p-3">
+            <div id="notificationToast" class="toast text-bg-success border-0 w-100" role="alert" aria-live="assertive"
                 aria-atomic="true">
                 <div class="d-flex">
-                    <div class="toast-body toast-msg fw-bold">
-                        <!-- message will go here -->
+                    <div class="toast-body toast-message fw-bold">
+                        <!-- Toast message -->
                     </div>
                     <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
                         aria-label="Close"></button>
@@ -107,7 +108,7 @@
             </div>
         </div>
 
-    </div>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
