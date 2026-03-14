@@ -48,16 +48,15 @@ cardRow.innerHTML = fruits
 
 let cart = [];
 
-// const showToast = (message) => {
-//   const toastBody = document.querySelector(".toast");
-//   const liveToast = document.querySelector(".toast-msg");
+const showToast = (message) => {
+  const toastContainer = document.getElementById("liveToast");
+  const toastBody = toastContainer.querySelector(".toast-msg");
+  
+  toastBody.textContent = message;
 
-//   toastBody.textContent = message;
-
-//   const toastTrigger = new bootstrap.Toast(liveToast);
-
-//   toastTrigger.show();
-// };
+  const toast = new bootstrap.Toast(toastContainer);
+  toast.show();
+};
 
 document.addEventListener("click", (e) => {
   if (e.target.classList.contains("addToCart")) {
@@ -100,8 +99,7 @@ const addToCart = (fruitId) => {
   existing ? existing.quantity++ : cart.push({ ...fruit, quantity: 1 });
 
   renderCart();
-
-  // showToast(`${fruit.name} is added to cart`);
+  showToast(`${fruit.name} has been added to your cart!`);
 };
 
 const badge = document.querySelector(".badge");
@@ -123,7 +121,6 @@ const renderCart = () => {
         </div>
     `;
     orderNowBtn.disabled = true;
-    // orderNowBtn.style.cursor = "not-allowed"
     return;
   }
 
@@ -142,8 +139,8 @@ const renderCart = () => {
           </thead>
           <tbody>
             ${cart
-              .map(
-                (item) => `
+      .map(
+        (item) => `
             <tr class="border-bottom">
               <td class="py-2 d-flex align-items-center justify-content-center">
                 <span class="fw-bold">${item.name}</span>
@@ -177,8 +174,8 @@ const renderCart = () => {
               </td>
             </tr>
           `,
-              )
-              .join("")}
+      )
+      .join("")}
           </tbody>
         </table>
       </div>
@@ -200,9 +197,11 @@ document.getElementById("confirmOrderBtn").addEventListener("click", () => {
 
   document.querySelector(".container").style.display = "none";
 
-
   if (cart.length > 0) {
     container.style.display = "block";
+
+    container.innerHTML = '<h1 class="thankyou-text text-center mb-0 text-success">Order Placed, Thank You!</h1>';
+
     let animation = lottie.loadAnimation({
       container: container,
       renderer: "svg",
@@ -216,11 +215,12 @@ document.getElementById("confirmOrderBtn").addEventListener("click", () => {
       container.style.display = "none";
       document.querySelector(".container").style.display = "block";
 
+      animation.destroy();
+
       cart = [];
+      renderCart();
     });
-    badge.textContent = "";
+    badge.textContent = "0";
   }
-  setTimeout(() => {
-    window.location.reload();
-  }, 5000);
+
 });
