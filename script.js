@@ -67,10 +67,8 @@ document.addEventListener("click", (e) => {
   if (e.target.classList.contains("btn-increase-qty")) {
     const productId = Number(e.target.dataset.id);
     const item = shoppingCart.find((i) => i.id === productId);
-    if (item) {
-      item.quantity++;
-      renderShoppingCart();
-    }
+    if (item) item.quantity++;
+    renderShoppingCart();
   }
 
   if (e.target.classList.contains("btn-decrease-qty")) {
@@ -95,18 +93,24 @@ const addToCart = (productId) => {
   const product = products.find((p) => p.id === productId);
   const existingItem = shoppingCart.find((e) => e.id === productId);
 
-  existingItem ? existingItem.quantity++ : shoppingCart.push({ ...product, quantity: 1 });
+  existingItem
+    ? existingItem.quantity++
+    : shoppingCart.push({ ...product, quantity: 1 });
 
   renderShoppingCart();
   showNotificationToast(`${product.name} has been added to your cart!`);
 };
 
 const cartBadge = document.querySelector(".badge");
+
 const renderShoppingCart = () => {
   const cartTableBody = document.getElementById("cart-table-body");
   const btnCheckout = document.getElementById("btn-checkout");
 
-  const totalItemsCount = shoppingCart.reduce((sum, item) => sum + item.quantity, 0);
+  const totalItemsCount = shoppingCart.reduce(
+    (sum, item) => sum + item.quantity,
+    0,
+  );
   const totalOrderValue = shoppingCart.reduce((sum, item) => {
     return sum + item.price * item.quantity;
   }, 0);
@@ -138,12 +142,12 @@ const renderShoppingCart = () => {
           </thead>
           <tbody>
             ${shoppingCart
-      .map(
-        (item) => `
+              .map(
+                (item) => `
             <tr class="border-bottom">
               <td class="py-2 d-flex align-items-center justify-content-center">
                 <span class="fw-bold">${item.name}</span>
-                <div class="d-md-none text-muted small">$${item.price.toFixed(2)}</div>
+                
               </td>
               
               <td class="py-2 d-flex d-md-table-cell align-items-center justify-content-center">
@@ -158,7 +162,7 @@ const renderShoppingCart = () => {
                 </div>
               </td>
               
-              <td class="py-2 fw-bold d-md-table-cell d-flex gap-1 align-items-center justify-content-center">
+              <td class="py-2 fw-bold d-none d-md-table-cell d-flex gap-1 align-items-center justify-content-center">
                 $${(item.price * item.quantity).toFixed(2)}
               </td>
               
@@ -173,8 +177,8 @@ const renderShoppingCart = () => {
               </td>
             </tr>
           `,
-      )
-      .join("")}
+              )
+              .join("")}
           </tbody>
         </table>
       </div>
@@ -197,6 +201,9 @@ document.getElementById("btn-confirm-order").addEventListener("click", () => {
 
   mainContainer.classList.add("d-none");
 
+  lottieContainer.innerHTML = `<h2 class="thankyou-text text-center mb-0 text-success">Order
+                Placed, Thank You!</h2>`;
+
   if (shoppingCart.length > 0) {
     lottieContainer.classList.remove("d-none");
 
@@ -205,8 +212,9 @@ document.getElementById("btn-confirm-order").addEventListener("click", () => {
       renderer: "svg",
       loop: false,
       autoplay: false,
-      path: "../Animation/order-placed1.json",
+      path: "../Animation/order-placed.json",
     });
+
     orderAnimation.play();
 
     orderAnimation.addEventListener("complete", () => {
@@ -220,5 +228,4 @@ document.getElementById("btn-confirm-order").addEventListener("click", () => {
     });
     cartBadge.textContent = "0";
   }
-
 });
