@@ -142,8 +142,8 @@ const renderShoppingCart = () => {
           </thead>
           <tbody>
             ${shoppingCart
-              .map(
-                (item) => `
+      .map(
+        (item) => `
             <tr class="border-bottom">
               <td class="py-2 d-flex align-items-center justify-content-center">
                 <span class="fw-bold">${item.name}</span>
@@ -177,8 +177,8 @@ const renderShoppingCart = () => {
               </td>
             </tr>
           `,
-              )
-              .join("")}
+      )
+      .join("")}
           </tbody>
         </table>
       </div>
@@ -191,9 +191,7 @@ const renderShoppingCart = () => {
 
 document
   .getElementById("cartSummaryModal")
-  .addEventListener("show.bs.modal", () => {
-    renderShoppingCart();
-  });
+  .addEventListener("show.bs.modal", renderShoppingCart);
 
 document.getElementById("btn-confirm-order").addEventListener("click", () => {
   const lottieContainer = document.querySelector(".lottieContainer");
@@ -201,8 +199,7 @@ document.getElementById("btn-confirm-order").addEventListener("click", () => {
 
   mainContainer.classList.add("d-none");
 
-  lottieContainer.innerHTML = `<h2 class="thankyou-text text-center mb-0 text-success">Order
-                Placed, Thank You!</h2>`;
+  lottieContainer.innerHTML = `<h2 class="thankyou-text text-center mb-0 text-success">Order Placed, Thank You!</h2>`;
 
   if (shoppingCart.length > 0) {
     lottieContainer.classList.remove("d-none");

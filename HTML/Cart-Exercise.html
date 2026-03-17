@@ -15,19 +15,18 @@
         <link
             href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
             rel="stylesheet">
-        <link rel="stylesheet" href="../Cart-Exercise.css">
-        <link rel="stylesheet" href="../style.css">
+        <link rel="stylesheet" href="../CSS/Cart-Exercise.css">
 
-        <title>Cart Exercise</title>
+        <title>Farm2Home</title>
     </head>
 
-    <body class="cart-container">
+    <body class="cart-container p-0 m-0">
 
         <nav class="navbar navbar-expand-xxl bg-secondary p-4">
             <div
-                class="container-fluid d-flex justify-content-between align-items-center px-4">
+                class="container-fluid d-flex justify-content-between align-items-center px-sm-4 px-0">
 
-                <div class="navigation-logo">
+                <div>
                     <a href="#">
                         <img src="../Icons/online-shopping.svg"
                             alt="company-logo" width="36" height="36">
@@ -51,7 +50,7 @@
             </div>
         </nav>
 
-        <main class="main main-content">
+        <main class="main-content">
             <section class="container pt-5 pb-5">
                 <div class="row d-flex gy-5" id="product-grid">
                     <!-- Card html structure -->
@@ -59,8 +58,9 @@
             </section>
 
             <div class="modal fade" id="cartSummaryModal"
-                aria-labelledby="cartSummaryModalLabel" tabindex="-1"
-                data-bs-backdrop="static" data-bs-keyboard="false">
+                aria-labelledby="cartSummaryModalLabel"
+                data-bs-backdrop="static"
+                data-bs-keyboard="false">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -83,7 +83,7 @@
                 </div>
             </div>
             <div class="modal fade" id="orderConfirmationModal"
-                aria-labelledby="orderConfirmationModalLabel" tabindex="-1"
+                aria-labelledby="orderConfirmationModalLabel"
                 data-bs-backdrop="static" data-bs-keyboard="false">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -111,7 +111,6 @@
 
             <div
                 class="lottieContainer position-absolute top-50 start-50 d-none">
-
             </div>
 
             <div class="position-fixed bottom-0 end-0 p-3">
@@ -140,7 +139,7 @@
             crossorigin="anonymous"></script>
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.4/lottie.min.js"></script>
-        <script src="../script.js"></script>
+        <script src="../JavaScript/script.js"></script>
 
     </body>
 
