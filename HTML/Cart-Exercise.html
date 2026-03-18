@@ -22,7 +22,7 @@
 
     <body class="cart-container p-0 m-0">
 
-        <nav class="navbar navbar-expand-xxl bg-secondary p-4">
+        <nav class="navbar navbar-expand-xxl bg-secondary p-4 sticky-top">
             <div
                 class="container-fluid d-flex justify-content-between align-items-center px-sm-4 px-0">
 
@@ -44,7 +44,7 @@
                             data-bs-target="#cartSummaryModal"
                             data-bs-toggle="modal">
                         <span
-                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-success"></span>
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-success">0</span>
                     </a>
                 </div>
             </div>
@@ -52,7 +52,7 @@
 
         <main class="main-content">
             <section class="container pt-5 pb-5">
-                <div class="row d-flex gy-5" id="product-grid">
+                <div class="row d-flex gy-4" id="product-grid">
                     <!-- Card html structure -->
                 </div>
             </section>
@@ -70,7 +70,7 @@
                                 data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                         </div>
-                        <div class="modal-body" id="cart-table-body">
+                        <div class="modal-body cart-table-body" id="cart-table-body">
                             <!-- Modal html structure -->
                         </div>
                         <div class="modal-footer">

@@ -58,37 +58,6 @@ const showNotificationToast = (message) => {
   toast.show();
 };
 
-document.addEventListener("click", (e) => {
-  if (e.target.classList.contains("btn-add-to-cart")) {
-    const productId = Number(e.target.dataset.id);
-    addToCart(productId);
-  }
-
-  if (e.target.classList.contains("btn-increase-qty")) {
-    const productId = Number(e.target.dataset.id);
-    const item = shoppingCart.find((i) => i.id === productId);
-    if (item) item.quantity++;
-    renderShoppingCart();
-  }
-
-  if (e.target.classList.contains("btn-decrease-qty")) {
-    const productId = Number(e.target.dataset.id);
-    const item = shoppingCart.find((i) => i.id === productId);
-    if (item && item.quantity > 1) {
-      item.quantity--;
-    } else {
-      shoppingCart = shoppingCart.filter((i) => i.id !== productId);
-    }
-    renderShoppingCart();
-  }
-
-  if (e.target.classList.contains("btn-remove-item")) {
-    const productId = Number(e.target.dataset.id);
-    shoppingCart = shoppingCart.filter((i) => i.id !== productId);
-    renderShoppingCart();
-  }
-});
-
 const addToCart = (productId) => {
   const product = products.find((p) => p.id === productId);
   const existingItem = shoppingCart.find((e) => e.id === productId);
@@ -100,8 +69,6 @@ const addToCart = (productId) => {
   renderShoppingCart();
   showNotificationToast(`${product.name} has been added to your cart!`);
 };
-
-const cartBadge = document.querySelector(".badge");
 
 const renderShoppingCart = () => {
   const cartTableBody = document.getElementById("cart-table-body");
@@ -133,28 +100,27 @@ const renderShoppingCart = () => {
         <table class="table table-borderless">
           <thead class="d-none d-md-table-header-group">
             <tr>
-              <th>Item</th>
-              <th>Price</th>
-              <th>Qty</th>
-              <th>Total</th>
+              <th scope="col">Item</th>
+              <th scope="col">Price</th>
+              <th scope="col">Qty</th>
+              <th scope="col">Total</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             ${shoppingCart
-      .map(
-        (item) => `
-            <tr class="border-bottom">
-              <td class="py-2 d-flex align-items-center justify-content-center">
-                <span class="fw-bold">${item.name}</span>
-                
+              .map(
+                (item) => `
+            <tr class="cart-row d-flex justify-content-evenly align-items-center flex-sm-nowrap flex-wrap">
+              <td class="py-2 d-flex align-items-center justify-content-center w-50 w-sm-auto">
+                <span class="fw-bold py-md-2 py-0 text-center">${item.name}</span>
               </td>
               
-              <td class="py-2 d-flex d-md-table-cell align-items-center justify-content-center">
-                $${item.price.toFixed(2)}
+              <td class="text-center d-flex d-md-table-cell align-items-center justify-content-center w-sm-auto w-50">
+                <span class="d-flex align-items-center justify-content-center py-2">$${item.price.toFixed(2)}</span>
               </td>
               
-              <td class="py-2 d-flex align-items-center justify-content-center">
+              <td class="py-2 d-flex align-items-center justify-content-center w-sm-auto w-50">
                 <div class="d-flex gap-1 align-items-center justify-content-center">
                   <button class="btn btn-sm btn-outline-secondary btn-decrease-qty px-3" data-id="${item.id}">−</button>
                   <span class="fw-bold" style="width: 30px; text-align: center;">${item.quantity}</span>
@@ -162,31 +128,79 @@ const renderShoppingCart = () => {
                 </div>
               </td>
               
-              <td class="py-2 fw-bold d-none d-md-table-cell d-flex gap-1 align-items-center justify-content-center">
-                $${(item.price * item.quantity).toFixed(2)}
+              <td class="py-2 fw-bold d-none d-md-table-cell d-flex gap-1 align-items-center justify-content-center w-sm-auto w-50">
+                <span class="d-flex align-items-center justify-content-center py-2">$${(item.price * item.quantity).toFixed(2)}</span>
               </td>
               
-              <td class="py-2 text-end d-flex align-items-center justify-content-center">
+              <td class="py-2 text-end d-flex align-items-center justify-content-center w-sm-auto w-50">
                 <button class="btn btn-sm btn-danger px-3 btn-remove-item" data-id="${item.id}">X</button>
               </td>
             </tr>
             
-            <tr class="d-md-none">
-              <td colspan="4" class="py-1 text-end text-muted small">
+            <tr class="d-md-none border-bottom">
+              <td colspan="4" class="py-3 text-end text-muted small">
                 Total: <span class="fw-bold">$${(item.price * item.quantity).toFixed(2)}</span>
               </td>
             </tr>
           `,
-      )
-      .join("")}
+              )
+              .join("")}
           </tbody>
         </table>
       </div>
       
-      <div class="px-2 py-3 mt-3 border-top">
+      <div class="px-2 py-3 mt-3 ">
         <h5 class="text-end fw-bold">Grand Total: $${totalOrderValue.toFixed(2)}</h5>
       </div>
     `;
+
+  cartItemEventListeners();
+};
+
+const cartBadge = document.querySelector(".badge");
+const addToCartBtns = document.querySelectorAll(".btn-add-to-cart");
+
+addToCartBtns.forEach((button) => {
+  button.addEventListener("click", (e) => {
+    const productId = Number(button.dataset.id);
+    addToCart(productId);
+  });
+});
+
+const cartItemEventListeners = () => {
+  const increaseBtn = document.querySelectorAll(".btn-increase-qty");
+  const decreaseBtn = document.querySelectorAll(".btn-decrease-qty");
+  const removeBtn = document.querySelectorAll(".btn-remove-item");
+
+  increaseBtn.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const productId = Number(button.dataset.id);
+      const item = shoppingCart.find((i) => i.id === productId);
+      if (item) item.quantity++;
+      renderShoppingCart();
+    });
+  });
+
+  decreaseBtn.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const productId = Number(button.dataset.id);
+      const item = shoppingCart.find((i) => i.id === productId);
+      if (item && item.quantity > 1) {
+        item.quantity--;
+      } else {
+        shoppingCart = shoppingCart.filter((i) => i.id !== productId);
+      }
+      renderShoppingCart();
+    });
+  });
+
+  removeBtn.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      const productId = Number(button.dataset.id);
+      shoppingCart = shoppingCart.filter((i) => i.id !== productId);
+      renderShoppingCart();
+    });
+  });
 };
 
 document
