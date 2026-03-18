@@ -111,7 +111,7 @@ const renderShoppingCart = () => {
             ${shoppingCart
               .map(
                 (item) => `
-            <tr class="cart-row d-flex justify-content-evenly align-items-center flex-sm-nowrap flex-wrap">
+            <tr class="cart-row d-flex justify-content-evenly align-items-center flex-sm-nowrap flex-wrap border-bottom">
               <td class="py-2 d-flex align-items-center justify-content-center w-50 w-sm-auto">
                 <span class="fw-bold py-md-2 py-0 text-center">${item.name}</span>
               </td>

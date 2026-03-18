@@ -20,3 +20,9 @@
         height: auto;
     }
 }
+
+@media only screen and (max-width: 768px) {
+    .cart-container .main-content .cart-table-body .cart-row {
+        border: none !important;
+    }
+}
